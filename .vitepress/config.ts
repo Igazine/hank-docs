@@ -27,7 +27,8 @@ export default defineConfig({
       { text: 'Standard Library', link: '/stdlib/overview' },
       { text: 'Implementations', link: '/guide/implementations' },
       { text: 'Host Integration', link: '/runner/architecture' },
-      { text: 'Playground', link: '/playground' }
+      { text: 'Playground', link: '/playground' },
+      { text: 'Specs & Core', link: 'https://github.com/Igazine/hank' }
     ],
     sidebar: {
       '/guide/': [
@@ -67,10 +68,10 @@ export default defineConfig({
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Igazine/hank-docs' }
+      { icon: 'github', link: 'https://github.com/Igazine/hank' }
     ],
     footer: {
-      message: 'Released under the MIT License.',
+      message: 'Released under the MIT License. Core Specification: <a href="https://github.com/Igazine/hank" target="_blank" style="color: var(--vp-c-brand);">Igazine/hank</a>',
       copyright: 'Copyright 2026-Present Digigun.net|Igazine'
     },
     search: {

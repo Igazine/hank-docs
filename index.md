@@ -26,6 +26,12 @@ features:
 
 Hank is a compact, purely symbolic (keyword-less), instruction-oriented, embeddable language designed for high-performance automation, orchestration, and API implementation. It serves as a strict, unambiguous, and highly readable alternative to configuration formats like YAML or TOML, and scripts like JavaScript.
 
+## The Core Repository
+
+This site contains the educational guides and playground for the Hank ecosystem. The **Source of Truth**, including formal language specifications and engine conformance tests, is maintained in the core repository:
+
+👉 **[github.com/Igazine/hank](https://github.com/Igazine/hank)**
+
 ## Core Philosophy
 
 Hank is built on three unbreakable pillars that ensure absolute predictability across different host environments. [Read the full Philosophy & Vision &rarr;](./guide/philosophy.md)
