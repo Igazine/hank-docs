@@ -1,0 +1,3 @@
+[submodule "vendor/hank-ts"]
+	path = vendor/hank-ts
+	url = https://github.com/Igazine/hank-ts.git
