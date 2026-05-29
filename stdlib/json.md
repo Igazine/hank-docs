@@ -1,6 +1,6 @@
 # JSON Module
 
-The `json` module provides the foundational tools for the Complex Object Bridge protocol.
+The `json` module provides the foundational tools for the Complex Object Bridge mechanism.
 
 ## Purpose
 

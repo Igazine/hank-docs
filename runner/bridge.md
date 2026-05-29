@@ -1,6 +1,6 @@
 # Complex Object Bridge
 
-The Complex Object Bridge is the secure protocol for bringing native host state (like UI components, open sockets, or database connections) into the Hank environment without violating the language's core principles.
+The Complex Object Bridge is the secure mechanism for bringing native host state (like UI components, open sockets, or database connections) into the Hank environment without violating the language's core principles.
 
 ## Purity vs Utility
 
@@ -31,7 +31,7 @@ class User implements IHankSerializable {
 }
 ```
 
-## Bridging Protocol
+## Bridging Mechanism
 
 1.  **Selection**: The Host developer chooses which complex objects to pass as arguments to a script.
 2.  **Flattening**: The Runner invokes `serializeHank()` on each object, producing a Hank String.

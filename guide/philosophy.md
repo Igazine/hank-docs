@@ -1,6 +1,6 @@
 # The Hank Philosophy: Beyond Scripting
 
-Hank is often described as an "automation language" or a "scripting engine," but these terms are technically incomplete. In reality, **Hank is a protocol for exposing functionality.**
+Hank is a purely symbolic, instruction-oriented embeddable language designed for secure orchestration and automation. It provides an air-gapped environment perfect for plugin systems and API interfaces, replacing static configuration with predictable, keyword-less logic.
 
 Standard languages (Python, JS, Lua) come with a "worldview"—they bring their own math, their own I/O models, and their own opinions on how things should work. Hank brings nothing but a syntax. The **Host** provides the world.
 
@@ -19,7 +19,7 @@ By stripping the language of its own identity, it takes on the identity of the s
 ## 2. Native Tasks as "Serverless" Endpoints
 Every `NativeTask` registered in the Runner acts as a secure, high-performance API endpoint. Because Hank is purely symbolic, the script can never "break out" of the sandbox. It can only call the actions the Host explicitly maps.
 
-This makes Hank the ultimate **Bridge Protocol**. You can expose complex, dangerous native capabilities (like raw socket access or filesystem manipulation) through a set of "Safe Tasks" that validate every move before it hits the CPU.
+This makes Hank the ultimate **integration layer**. You can expose complex, dangerous native capabilities (like raw socket access or filesystem manipulation) through a set of "Safe Tasks" that validate every move before it hits the CPU.
 
 ## 3. The Infinite Bridge (Opaque State)
 One of Hank’s most powerful features is the `Opaque` value. It allows the Host to hand the script a "Handle" to a complex internal object—a database connection, a TLS socket, or a Docker container—without the script ever needing to know the object's structure.

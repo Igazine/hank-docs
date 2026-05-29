@@ -1,6 +1,7 @@
 {
-  "name": "hank-spec-docs",
+  "name": "hank-docs",
   "version": "1.0.0",
+  "description": "A purely symbolic, embeddable language designed for secure orchestration and automation. It provides an air-gapped environment perfect for plugin systems and API interfaces, replacing static configuration with predictable, keyword-less logic.",
   "private": true,
   "type": "module",
   "scripts": {

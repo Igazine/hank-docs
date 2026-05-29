@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: "Hank"
-  text: "Hybrid Automation/Scripting Language"
-  tagline: "The pure symbolic instruction set for cross-platform orchestration and API specifications."
+  text: "The Air-Gapped Embeddable Language"
+  tagline: "A purely symbolic, instruction-oriented language designed for secure orchestration, plugin systems, and API interfaces."
   actions:
     - theme: brand
       text: Get Started
@@ -19,12 +19,12 @@ features:
   - title: Pure Symbolic
     details: Zero reserved keywords for values. Everything is an identifier.
   - title: Multi-Engine
-    details: Bit-perfect execution parity across Go, Rust, TS, and Haxe.
+    details: Bit-perfect execution parity across all officially supported native implementations.
 ---
 
 # Hybrid Automation Language (Hank)
 
-Hank is a compact, purely symbolic (keyword-less), instruction-oriented, embeddable language designed for high-performance automation, orchestration, and API implementation. It serves as a strict, unambiguous, and highly readable alternative to configuration formats like YAML or TOML, and scripts like JavaScript.
+Hank is a purely symbolic, instruction-oriented embeddable language designed to bring secure, dynamic automation to any host application. Built on a strict air-gapped execution model, Hank has zero built-in I/O, guaranteeing that scripts cannot access the filesystem, network, or OS without explicit delegation. This makes it the perfect predictable environment for game scripting, microservice orchestration, and user-facing plugin systems. With a highly readable, keyword-less syntax and universal cross-platform parity, Hank seamlessly bridges the gap between static configuration files and complex general-purpose programming.
 
 ## The Core Repository
 
