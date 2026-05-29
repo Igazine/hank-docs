@@ -2,7 +2,7 @@
 
 Hank is an open language specification. While anyone is free to implement the Hank engine in any language, we provide several official, spec-compliant implementations to ensure maximum parity and ease of use.
 
-All official implementations follow the same bit-perfect execution model and include the spec-compliant [Standard Library](/stdlib/overview).
+All official implementations follow the same bit-perfect execution model and include the spec-compliant [Standard Library](../stdlib/overview.md).
 
 ## Go
 The Go implementation is a pure, zero-dependency package suitable for high-performance backend orchestration and cloud-native services.
@@ -11,7 +11,7 @@ The Go implementation is a pure, zero-dependency package suitable for high-perfo
 *   **Best for**: DevOps tooling, Kubernetes operators, and high-concurrency backends.
 
 ## Rust
-A memory-safe, ultra-lean implementation designed for systems programming and embedded devices. This engine powered the [Eddie Milestone](/index#case-study-the-eddie-embedded-milestone).
+A memory-safe, ultra-lean implementation designed for systems programming and embedded devices. This engine powered the [Eddie Milestone](../index.md#case-study-the-eddie-embedded-milestone).
 
 *   **Repository**: [Igazine/hank-rust](https://github.com/Igazine/hank-rust)
 *   **WebAssembly**: The Rust engine can be compiled directly to **Wasm**, allowing Tier-1 performance in browser and Edge environments.

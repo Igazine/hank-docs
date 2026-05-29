@@ -5,9 +5,9 @@ export default defineConfig({
   title: "Hank",
   description: "Hybrid Automation/Scripting Language Documentation",
   base: '/hank-docs/',
-  cleanUrls: false,
+  cleanUrls: true,
   srcDir: '../',
-  srcExclude: ['**/node_modules/**', '**/package*.json', '**/*.sh'],
+  srcExclude: ['**/node_modules/**', '**/package*.json', '**/vendor/**', '**/*.sh'],
   vite: {
     resolve: {
       alias: [

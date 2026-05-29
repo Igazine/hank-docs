@@ -8,10 +8,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/syntax
+      link: ./guide/syntax.md
     - theme: alt
       text: Documentation
-      link: /stdlib/overview
+      link: ./stdlib/overview.md
 
 features:
   - title: Air Gapped
@@ -28,7 +28,7 @@ Hank is a compact, purely symbolic (keyword-less), instruction-oriented, embedda
 
 ## Core Philosophy
 
-Hank is built on three unbreakable pillars that ensure absolute predictability across different host environments. [Read the full Philosophy & Vision &rarr;](/guide/philosophy)
+Hank is built on three unbreakable pillars that ensure absolute predictability across different host environments. [Read the full Philosophy & Vision &rarr;](./guide/philosophy.md)
 
 ### 1. The Air Gap Principle
 Hank is target-agnostic and has zero built-in I/O capabilities. It cannot read files, access the network, or interact with the operating system on its own. All environmental mutations are deferred to host-provided Native Tasks.
