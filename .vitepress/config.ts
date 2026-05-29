@@ -4,13 +4,10 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   title: "Hank",
   description: "Hybrid Automation/Scripting Language Documentation",
-  base: '/hank/',
+  base: '/hank-docs/',
   cleanUrls: false,
   srcDir: '../',
-  srcExclude: ['**/test/**', '**/node_modules/**', '**/README.md', '**/LICENSE.md', '**/package*.json', '**/*.sh'],
-  rewrites: {
-    'docs/:rest*': ':rest*'
-  },
+  srcExclude: ['**/node_modules/**', '**/package*.json', '**/*.sh'],
   vite: {
     resolve: {
       alias: [
@@ -71,7 +68,7 @@ export default defineConfig({
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Igazine/hank' }
+      { icon: 'github', link: 'https://github.com/Igazine/hank-docs' }
     ],
     footer: {
       message: 'Released under the MIT License.',

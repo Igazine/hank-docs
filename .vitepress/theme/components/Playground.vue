@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { BrowserRunner } from '../../../vendor/hank-ts/index.ts'
+import { BrowserRunner } from '../../../src/BrowserRunner.ts'
 
 const activeTab = ref('script')
 

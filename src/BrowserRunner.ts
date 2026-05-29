@@ -1,4 +1,4 @@
-import { Lexer, Parser, Interpreter, Value, ValueType, HankScope, Scope, ExecutionContext, IHankExtension } from './index.js';
+import { Lexer, Parser, Interpreter, Value, ValueType, HankScope, Scope, ExecutionContext, IHankExtension } from '../vendor/hank-ts/src/index.js';
 
 /**
  * Options for the BrowserRunner, allowing hooks into host-environment behaviors.
