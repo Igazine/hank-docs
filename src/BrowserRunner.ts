@@ -1,6 +1,6 @@
-import { Runner } from '../vendor/hank-ts/dist/Runner.js';
-import { StdLib } from '../vendor/hank-ts/dist/stdlib/index.js';
-import { Value, ValueType, NativeFunc, ExecutionContext } from '../vendor/hank-ts/dist/Types.js';
+import { Runner } from '../vendor/hank-ts/src/Runner.js';
+import { StdLib } from '../vendor/hank-ts/src/stdlib/index.js';
+import { Value, ValueType, NativeFunc, ExecutionContext } from '../vendor/hank-ts/src/Types.js';
 
 export interface BrowserRunnerOptions {
     env?: Record<string, string>;
