@@ -66,11 +66,11 @@ This means `0`, `""`, and `[]` are all **Truthy**.
 ? _ { } : { log.print("Unbound identifier is falsy (Void)") }
 ```
 
-## Looping
+## Iteration (Standard Library)
 
-Iteration is handled via the `loop` module.
+Hank has **zero built-in loop keywords** (no `while`, `for`, or `loop`). Iteration is handled via the `loop` module in the Standard Library, which utilizes Hank's native Task-passing capabilities.
 
-### while
+### loop.while
 
 `loop.while(condition_task, body_task)` repeatedly executes the body as long as the condition returns a truthy value.
 
@@ -88,16 +88,19 @@ Iteration is handled via the `loop` module.
 }
 ```
 
-### breaking
+### loop.break
 
 Use `loop.break()` to immediately exit the innermost loop.
 
+### Native `continue`
+
+Since the loop body is simply a Task, the return operator (`^`) naturally acts as a `continue` statement. It halts the current execution of the body and returns control to the loop manager, which then re-evaluates the condition.
+
 ```hank
-() {
-  loop.while(() { 1 }, () {
-    ? some_condition {
-      loop.break()
-    }
-  })
-}
+loop.while(cond, () {
+  ? skip_this_iteration {
+    ^ // Acts as 'continue'
+  }
+  process_item()
+})
 ```
