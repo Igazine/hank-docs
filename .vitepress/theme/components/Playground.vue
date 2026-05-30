@@ -1,106 +1,129 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { BrowserRunner } from '../../../src/BrowserRunner.ts'
+<script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
+import { BrowserRunner } from '../../../src/BrowserRunner'
 
-const activeTab = ref('script')
-
-const code = ref(`() {
-  log.print("Hello from the Hank Playground!")
+const activeTab = ref<'script' | 'vfs'>('script')
+const script = ref(`() {
+  log.print("Hello from Hank!")
   
-  sum = math.add(10, 25)
-  log.print(str.format("10 + 25 = %1", sum))
+  // New Map Syntax
+  user = [
+    "name": "Tamas",
+    "role": "Architect"
+  ]
   
-  // Uncomment below to test Macro inclusion from the 'Virtual Files' tab
-  // @"utils"
-  // u = utils()
-  // log.print(str.format("5 + 10 = %1", u.add_ten(5)))
-}`)
-
-const vfsCode = ref(`{
-  "utils": "() { ^ { add_ten: (n) { ^ math.add(n, 10) } } }"
-}`)
-
-const output = ref([])
-const isRunning = ref(false)
-
-const runCode = async () => {
-  output.value = []
-  isRunning.value = true
-  
-  let vfs = {}
-  try {
-    vfs = JSON.parse(vfsCode.value)
-  } catch (e) {
-    output.value.push({ msg: "VFS Error: Virtual Files must be a valid JSON object map.", type: 'error' })
-    isRunning.value = false
-    return
+  // Paren-less Flow Control
+  ? math.eq(user.name, "Tamas") {
+    log.print(str.format("Welcome, %1!", user.name))
+  } : {
+    log.print("Access Denied")
   }
   
-  const runner = new BrowserRunner({
-    onOutput: (msg, type) => {
-      output.value.push({ msg, type })
-    },
-    onExit: (code) => {
-      output.value.push({ msg: `Process exited with code ${code}`, type: 'system' })
-    },
-    vfs: vfs
-  })
-  
+  // Safe Error Rescuing
+  ? math.add(user.name, 100) {
+    log.print("Success")
+  } ~ (e) {
+    log.error(str.format("Error %1: %2", err.code(e), err.message(e)))
+  }
+}`)
+
+const vfs = ref(JSON.stringify({
+  "utils": "() { ^ [ \"add_ten\": (n) { ^ math.add(n, 10) } ] }"
+}, null, 2))
+
+const output = ref<{ msg: string, type: 'stdout' | 'stderr' | 'warn' | 'error' | 'system' }[]>([])
+const isRunning = ref(false)
+
+const runTask = async () => {
+  if (isRunning.value) return
+  isRunning.value = true
+  output.value = []
+  output.value.push({ msg: "Starting execution...", type: 'system' })
+
   try {
-    await runner.run(code.value)
-  } catch (e) {
-    output.value.push({ msg: e.toString(), type: 'error' })
+    const virtualFiles = JSON.parse(vfs.value)
+    
+    // Simple mock Resource for VFS
+    class MemoryResource {
+        public content: string | null = null;
+        public ast: any = null;
+        constructor(public id: string) {}
+        async load() {
+            if (this.id === 'main') this.content = script.value;
+            else if (virtualFiles[this.id]) this.content = virtualFiles[this.id];
+            else throw new Error(`File not found: ${this.id}`);
+        }
+        resolve(path: string) { return new MemoryResource(path); }
+    }
+
+    const runner = new BrowserRunner({
+      onPrint: (msg) => output.value.push({ msg, type: 'stdout' }),
+      onError: (msg) => output.value.push({ msg, type: 'stderr' }),
+      onWarn: (msg) => output.value.push({ msg, type: 'warn' }),
+    })
+
+    const mainRes = new MemoryResource('main')
+    const result = await runner.run(mainRes as any)
+    
+    output.value.push({ msg: `Script returned: ${result.toString()}`, type: 'system' })
+  } catch (e: any) {
+    if (e.message?.startsWith('HANK_HALT:')) {
+      const code = e.message.split(':')[1]
+      output.value.push({ msg: `Process exited with code ${code}`, type: 'system' })
+    } else {
+      output.value.push({ msg: e.toString(), type: 'error' })
+    }
   } finally {
     isRunning.value = false
   }
-}
-
-const clearOutput = () => {
-  output.value = []
 }
 </script>
 
 <template>
   <div class="playground-container">
     <div class="editor-section">
-      <div class="header">
-        <div class="tabs">
-          <button 
+      <div class="tabs">
+        <button 
             :class="['tab-btn', { active: activeTab === 'script' }]" 
             @click="activeTab = 'script'"
-          >Main Task</button>
-          <button 
+        >main.hank</button>
+        <button 
             :class="['tab-btn', { active: activeTab === 'vfs' }]" 
             @click="activeTab = 'vfs'"
-          >Virtual Files (@)</button>
-        </div>
-        <div class="actions">
-          <button @click="runCode" :disabled="isRunning" class="run-btn">
+        >Virtual Files (JSON)</button>
+      </div>
+      
+      <div class="editor-wrapper">
+        <textarea 
+            v-if="activeTab === 'script'"
+            v-model="script" 
+            spellcheck="false"
+            class="code-editor"
+        ></textarea>
+        <textarea 
+            v-else
+            v-model="vfs" 
+            spellcheck="false"
+            class="code-editor"
+        ></textarea>
+      </div>
+
+      <div class="controls">
+        <button @click="runTask" :disabled="isRunning" class="run-btn">
             {{ isRunning ? 'Running...' : 'Run Task' }}
-          </button>
-          <button @click="clearOutput" class="clear-btn">Clear</button>
-        </div>
-      </div>
-      
-      <div v-show="activeTab === 'script'">
-        <textarea v-model="code" class="code-editor" spellcheck="false" placeholder="Enter Hank Task here..."></textarea>
-      </div>
-      
-      <div v-show="activeTab === 'vfs'">
-        <div class="vfs-hint">Define a JSON map of filename -> Hank source code. These can be included via <code>@</code>.</div>
-        <textarea v-model="vfsCode" class="code-editor vfs-editor" spellcheck="false"></textarea>
+        </button>
       </div>
     </div>
-    
+
     <div class="output-section">
-      <div class="header">
-        <span class="title">Output</span>
-      </div>
-      <div class="output-log" ref="logContainer">
-        <div v-if="output.length === 0" class="empty-msg">No output yet. Click 'Run Task' to execute.</div>
-        <div v-for="(line, i) in output" :key="i" :class="['log-line', line.type]">
+      <div class="output-header">Console Output</div>
+      <div class="console">
+        <div v-for="(line, i) in output" :key="i" :class="['console-line', line.type]">
           <span class="line-prefix">[{{ line.type }}]</span>
           <span class="line-content">{{ line.msg }}</span>
+        </div>
+        <div v-if="output.length === 0" class="console-placeholder">
+          Click "Run Task" to see output here...
         </div>
       </div>
     </div>
@@ -112,79 +135,86 @@ const clearOutput = () => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 1rem 0;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   overflow: hidden;
-  background-color: var(--vp-c-bg-soft);
+  background: var(--vp-c-bg-soft);
 }
 
-.header {
+@media (min-width: 960px) {
+  .playground-container {
+    flex-direction: row;
+    height: 500px;
+  }
+}
+
+.editor-section {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  background-color: var(--vp-c-bg-mute);
-  border-bottom: 1px solid var(--vp-c-divider);
-  height: 40px;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .tabs {
   display: flex;
-  height: 100%;
+  background: var(--vp-c-bg-mute);
+  border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .tab-btn {
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   font-size: 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
+  font-weight: 600;
+  color: var(--vp-c-text-2);
   border: none;
   background: transparent;
-  color: var(--vp-c-text-2);
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  height: 100%;
-}
-
-.tab-btn:hover {
-  color: var(--vp-c-text-1);
+  cursor: pointer;
 }
 
 .tab-btn.active {
   color: var(--vp-c-brand);
-  border-bottom-color: var(--vp-c-brand);
+  background: var(--vp-c-bg-soft);
+  border-bottom: 2px solid var(--vp-c-brand);
 }
 
-.title {
-  font-weight: bold;
+.editor-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.code-editor {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  font-family: var(--vp-font-family-mono);
   font-size: 0.9rem;
-  text-transform: uppercase;
-  color: var(--vp-c-text-2);
+  background: transparent;
+  color: var(--vp-c-text-1);
+  border: none;
+  resize: none;
+  outline: none;
 }
 
-.actions {
+.controls {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--vp-c-divider);
   display: flex;
-  gap: 0.5rem;
-}
-
-.run-btn, .clear-btn {
-  padding: 2px 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
+  justify-content: flex-end;
 }
 
 .run-btn {
-  background-color: var(--vp-c-brand);
+  background: var(--vp-c-brand);
   color: white;
-  border: none;
+  padding: 0.4rem 1.2rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.run-btn:hover:not(:disabled) {
-  background-color: var(--vp-c-brand-next);
+.run-btn:hover {
+  opacity: 0.9;
 }
 
 .run-btn:disabled {
@@ -192,64 +222,50 @@ const clearOutput = () => {
   cursor: not-allowed;
 }
 
-.clear-btn {
-  background-color: transparent;
-  border: 1px solid var(--vp-c-divider);
-  color: var(--vp-c-text-1);
-}
-
-.clear-btn:hover {
-  border-color: var(--vp-c-brand);
-}
-
-.code-editor {
-  width: 100%;
-  height: 300px;
-  padding: 1rem;
-  font-family: var(--vp-font-family-mono);
-  font-size: 0.9rem;
-  background-color: var(--vp-c-bg);
-  color: var(--vp-c-text-1);
-  border: none;
-  resize: vertical;
-  outline: none;
-}
-
-.vfs-hint {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-  background-color: var(--vp-c-bg-soft);
-  color: var(--vp-c-text-2);
-  border-bottom: 1px solid var(--vp-c-divider);
-}
-
-.vfs-editor {
-  color: var(--vp-c-brand);
-}
-
 .output-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   border-top: 1px solid var(--vp-c-divider);
+  background: #1e1e1e;
+  color: #d4d4d4;
+  min-width: 0;
 }
 
-.output-log {
-  height: 180px;
+@media (min-width: 960px) {
+  .output-section {
+    border-top: none;
+    border-left: 1px solid var(--vp-c-divider);
+  }
+}
+
+.output-header {
   padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: #252526;
+  border-bottom: 1px solid #333;
+}
+
+.console {
+  flex: 1;
+  padding: 0.5rem;
   overflow-y: auto;
   font-family: var(--vp-font-family-mono);
   font-size: 0.85rem;
-  background-color: #000;
-  color: #fff;
 }
 
-.log-line {
-  margin-bottom: 2px;
+.console-line {
+  margin-bottom: 0.25rem;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .line-prefix {
-  color: #666;
-  margin-right: 8px;
-  font-size: 0.75rem;
+  opacity: 0.5;
+  margin-right: 0.5rem;
+  font-size: 0.7rem;
 }
 
 .stdout .line-content { color: #fff; }
@@ -258,9 +274,9 @@ const clearOutput = () => {
 .error .line-content { color: #ff5555; font-weight: bold; }
 .system .line-content { color: #8be9fd; font-style: italic; }
 
-.empty-msg {
+.console-placeholder {
   color: #666;
   font-style: italic;
-  padding-top: 0.5rem;
+  padding: 1rem;
 }
 </style>

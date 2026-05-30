@@ -1,46 +1,103 @@
 # Control Flow
 
-Hank provides a clean, unified syntax for conditional branching and error management.
+Hank provides a unified flow-control system based on three sigils: `?` (If), `:` (Fallback), and `~` (Rescue).
 
 ## Unified Gates
 
-The `?` (If), `:` (Fallback), and `~` (Rescue) sigils form a continuous control chain.
-
-### Branching (`?` and `:`)
-The `?` operator evaluates the truthiness of an expression. If truthy, the associated block is executed. An optional `:` block serves as the fallback if the condition is falsy.
+The `?`, `:`, and `~` sigils form a single control chain. 
 
 ```hank
-? (math.gt(count, 10)) {
-  log.print("Large batch")
-} : {
-  log.print("Small batch")
+() {
+  user_score = 95
+  
+  ? math.gt(user_score, 90) {
+    log.print("Grade: A")
+  } : {
+    log.print("Grade: B")
+  }
 }
 ```
 
-### Error Rescue (~)
-The `~` operator can be appended to any control chain. It intercepts host-level errors thrown within the preceding blocks. The rescue block receives a mandatory string parameter containing the serialized error message.
+### Optional Parentheses
+
+Since Hank evaluates truthiness directly from expressions, parentheses around the condition are **optional**.
 
 ```hank
-? (1) {
-  proc.run("dangerous-command")
-} ~ (err) {
-  log.error(str.format("Command failed: %1", err))
+// Paren-less (Idiomatic)
+? math.eq(x, y) { ... }
+
+// Parentheses (Valid Grouped Expression)
+? (math.eq(x, y)) { ... }
+```
+
+## Rescue Gate (`~`)
+
+The Rescue gate allows you to catch **Runtime Exceptions** (such as Type Mismatches or missing functions) without halting the script.
+
+```hank
+() {
+  ? result = risky_task() {
+    log.print("Task succeeded")
+  } ~ (e) {
+    log.error(str.format("Task failed with code: %1", err.code(e)))
+  }
 }
 ```
 
-## Logical Negation (!)
-
-The `!` operator evaluates the falsiness of an expression.
-
-- If the expression is **Truthy**, `!expr` returns `Void`.
-- If the expression is **Falsy** (`Void`), `!expr` returns `Number(1)`.
+If you don't need to inspect the error, the capture variable is optional:
 
 ```hank
-? (!env.get("API_KEY")) {
-  log.warn("Missing API key, running in guest mode")
+? risky_task() { } ~ {
+  log.print("Swallowed the error")
 }
 ```
 
-## Evaluation Results
+## Truthiness in Hank
 
-Control flow structures are expressions in Hank. They evaluate to the result of whichever branch was executed. If no branch matches and no fallback exists, the structure evaluates to `Void`.
+Hank follows a simple "Existence-is-Truth" model:
+* **Truthy**: Any concrete value (Number, String, Array, Map, Opaque, Task, Error).
+* **Falsy**: Only `Void` (the absence of a value).
+
+This means `0`, `""`, and `[]` are all **Truthy**. 
+
+```hank
+? 0 { log.print("Zero is truthy") }
+? [] { log.print("Empty array is truthy") }
+? _ { } : { log.print("Unbound identifier is falsy (Void)") }
+```
+
+## Looping
+
+Iteration is handled via the `loop` module.
+
+### while
+
+`loop.while(condition_task, body_task)` repeatedly executes the body as long as the condition returns a truthy value.
+
+```hank
+() {
+  items = [1, 2, 3]
+  
+  loop.while(
+    () { !arr.empty(items) },
+    () {
+      val = arr.pop(items)
+      log.print("Processing:", val)
+    }
+  )
+}
+```
+
+### breaking
+
+Use `loop.break()` to immediately exit the innermost loop.
+
+```hank
+() {
+  loop.while(() { 1 }, () {
+    ? some_condition {
+      loop.break()
+    }
+  })
+}
+```

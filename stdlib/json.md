@@ -1,32 +1,29 @@
-# JSON Module
+# JSON Serialization
 
-The `json` module provides the foundational tools for the Complex Object Bridge mechanism.
+Hank provides first-class support for JSON, ensuring data can flow seamlessly across the Air Gap.
 
-## Purpose
+## `json` Module
 
-Since complex host objects are bridged into Hank as flattened Strings, the `json` module allows script authors to reconstruct that data into traversable Hank Objects.
+* **`parse(s)`**: Converts a JSON string into Hank data. JSON Objects are converted to **Hank Maps**.
+* **`stringify(val)`**: Converts Hank data into a JSON string.
 
-## Tasks
-
-### `json.parse(string)`
-Parses a JSON-formatted string and returns the corresponding Hank data structure.
-
-```hal
+```hank
 () {
   json_str = '{"user": "tamas", "id": 123}'
   data = json.parse(json_str)
+  
   log.print(data.user) // "tamas"
+  
+  // Re-serialization
+  m = [ "x": 10, "y": 20 ]
+  log.print(json.stringify(m)) // '{"x": 10, "y": 20}'
 }
 ```
 
-### `json.stringify(value)`
-Serializes a Hank value into a JSON string.
+## Non-Serializable Data
 
-> **State Protection**: `Opaque` values (handles to Host state) are **not serializable**. If `stringify` encounters an `Opaque` value, it will either return `Void` or trigger a Host-defined error to prevent leaking internal memory state.
+Certain Hank types cannot be stringified because they represent volatile runtime state. Attempting to stringify these will result in `Void` or an error:
 
-```hal
-() {
-  obj = { x: 10, y: 20 }
-  log.print(json.stringify(obj)) // '{"x": 10, "y": 20}'
-}
-```
+* **Opaque handles** (e.g. active Regex engines)
+* **Task definitions**
+* **Error payloads**
