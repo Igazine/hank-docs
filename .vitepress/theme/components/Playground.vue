@@ -134,7 +134,6 @@ const runTask = async () => {
 .playground-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   margin: 1rem 0;
   border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
@@ -142,15 +141,7 @@ const runTask = async () => {
   background: var(--vp-c-bg-soft);
 }
 
-@media (min-width: 960px) {
-  .playground-container {
-    flex-direction: row;
-    height: 500px;
-  }
-}
-
 .editor-section {
-  flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -179,7 +170,7 @@ const runTask = async () => {
 }
 
 .editor-wrapper {
-  flex: 1;
+  height: 350px;
   position: relative;
 }
 
@@ -223,20 +214,12 @@ const runTask = async () => {
 }
 
 .output-section {
-  flex: 1;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--vp-c-divider);
   background: #1e1e1e;
   color: #d4d4d4;
   min-width: 0;
-}
-
-@media (min-width: 960px) {
-  .output-section {
-    border-top: none;
-    border-left: 1px solid var(--vp-c-divider);
-  }
 }
 
 .output-header {
@@ -249,7 +232,7 @@ const runTask = async () => {
 }
 
 .console {
-  flex: 1;
+  height: 250px;
   padding: 0.5rem;
   overflow-y: auto;
   font-family: var(--vp-font-family-mono);
