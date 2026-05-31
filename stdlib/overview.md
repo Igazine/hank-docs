@@ -1,10 +1,10 @@
 # Standard Library Overview
 
-The Hank Standard Library is a modular collection of native tasks provided by the Host environment. To maintain the **Air Gap Principle**, all I/O and platform-specific capabilities are decoupled from the core language and delivered as optional modules.
+The Hank Standard Library is a collection of native tasks provided by the Host environment. To maintain the **Air Gap Principle**, all I/O and platform-specific capabilities are decoupled from the core language and delivered as optional task namespaces.
 
-## Standard Modules
+## Task Namespaces
 
-| Module | Purpose |
+| Namespace | Purpose |
 | :--- | :--- |
 | **`log`** | Output and debugging. |
 | **`runtime`** | Monotonic timing, signaling, and engine control. |
@@ -15,15 +15,17 @@ The Hank Standard Library is a modular collection of native tasks provided by th
 | **`num`** | Numeric parsing and base conversion. |
 | **`math`** | Fundamental arithmetic and comparisons. |
 | **`logic`** | Functional composition of logical operations. |
+| **`type`** | Explicit reflection and type-checking. |
 | **`regex`** | Pattern matching via Opaque handles. |
 | **`json`** | Industry-standard data serialization. |
 | **`err`** | Structured inspection of Native Error payloads. |
 
 ## Philosophical Constraints
 
-1. **Strict Procedural Purity**: Values are inert. You never call methods on variables. Use `str_length(s)`, not `s.length()`.
-2. **Fail-Fast Typing**: Standard tasks strictly enforce parameter types. Passing a String to `math_add` triggers a catchable **Type Mismatch** Error.
-3. **Immutability by Default**: Most tasks return new values. Only `arr_push`, `arr_pop`, and `map_set` perform in-place mutation, and only on internal data types (never on Opaque handles).
+1. **The Flat Namespace**: In accordance with the Hank v1.5.0 architecture, the Standard Library does not use dot-notation. All tasks are registered as root-level identifiers using underscores to denote categories (e.g., `math_add`, `str_length`).
+2. **Strict Procedural Purity**: Values are inert. You never call methods on variables. Use `str_length(s)`, not `s.length()`.
+3. **Fail-Fast Typing**: Standard tasks strictly enforce parameter types. Passing a String to `math_add` triggers a catchable **Type Mismatch** Error.
+4. **Targeted Mutation**: Most tasks return new values. Only `arr_push`, `arr_pop`, `arr_shift`, `arr_unshift`, `arr_sort`, and `map_set` perform in-place mutation, and only on internal data types (never on Opaque handles).
 
 ## Official Extensions
 

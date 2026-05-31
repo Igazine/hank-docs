@@ -79,3 +79,17 @@ To mutate shared state, use reference types like **Arrays** or **Maps**.
   log_print(map_get(state, "count")) // 20
 }
 ```
+
+## Reflection & Type Checking
+
+Starting with **v1.5.0**, Hank provides the `type` namespace for explicit reflection. This eliminates the need for "duck typing" hacks.
+
+```hank
+() {
+  val = [1, 2]
+  ? type_isArray(val) { 
+    log_print("Processing list...") 
+  }
+}
+```
+

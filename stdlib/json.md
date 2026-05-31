@@ -2,10 +2,11 @@
 
 Hank provides first-class support for JSON, ensuring data can flow seamlessly across the Air Gap.
 
-## `json` Module
+## `json` Namespace
 
 * **`json_parse(s)`**: Converts a JSON string into Hank data. JSON Objects are converted to **Hank Maps**.
 * **`json_stringify(val)`**: Converts Hank data into a JSON string.
+
 
 ```hank
 () {

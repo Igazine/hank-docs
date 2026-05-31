@@ -48,9 +48,8 @@ If you don't need to inspect the error, the capture variable is optional:
 
 ```hank
 ? risky_task() { } ~ {
-  log.print("Swallowed the error")
+  log_print("Swallowed the error")
 }
-```
 
 ## Truthiness in Hank
 
@@ -61,8 +60,9 @@ Hank follows a simple "Existence-is-Truth" model:
 This means `0`, `""`, and `[]` are all **Truthy**. 
 
 ```hank
-? 0 { log.print("Zero is truthy") }
-? [] { log.print("Empty array is truthy") }
-? _ { } : { log.print("Unbound identifier is falsy (Void)") }
+? 0 { log_print("Zero is truthy") }
+? [] { log_print("Empty array is truthy") }
+? _ { } : { log_print("Unbound identifier is falsy (Void)") }
+```
 ```
 
