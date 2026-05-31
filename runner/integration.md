@@ -55,14 +55,34 @@ A compliant Runner implementation should provide a `registerExtension` method th
 
 If you are not using a formal Extension object, you can group tasks into objects manually to keep the global namespace clean.
 
-## Handling Host Arguments
+## Security & Data Sanitization
 
-The Host environment is responsible for capturing inputs and mapping them to Hank primitives before invoking the main script task.
+Hank is designed as a secure sandbox with a strict **Air Gap**. The engine guarantees:
+1. **Memory Isolation**: Scripts cannot access host memory unless explicitly provided.
+2. **Deterministic Execution**: Zero built-in I/O (no `print`, `read`, or `network` calls in the core).
+
+### The Boundary of Responsibility
+
+While the Hank Engine protects your system from arbitrary memory access, **it does NOT sanitize or parse the literal content of Strings or Numbers** passed into Native Tasks.
+
+If you expose a Native Task that performs sensitive operations (like database queries or shell commands), it is the **Host Application's absolute responsibility** to sanitize that data before use. Hank serves as a secure conduit, but not a data-validation engine.
+
+### Example: Secure DbExtension
+
+If you were building a custom database extension, you should use parameterized queries or escape strings within your native implementation:
 
 ```typescript
-const cliArgs = process.argv.slice(2);
-const halArgs = cliArgs.map(s => VString(s));
-
-// The runner executes the script task with these arguments
-const result = runner.run("deploy.hank", halArgs);
+// SECURE: Parameterizing the query in the Host implementation
+tasks.set("db_findUser", (args, ctx) => {
+    const userId = valToString(args[0]);
+    
+    // In the host logic, we use parameters to prevent SQL Injection.
+    // The Hank script just sends the string; the Host handles the security.
+    const result = db.query("SELECT * FROM users WHERE id = ?", [userId]);
+    
+    return mapAnyToHank(result);
+});
 ```
+
+By maintaining this clear boundary, you ensure that even if a Hank script is written by an untrusted user, they cannot "break out" of the Native Task's intended logic into your host system.
+
