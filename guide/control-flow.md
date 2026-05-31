@@ -10,10 +10,10 @@ The `?`, `:`, and `~` sigils form a single control chain.
 () {
   user_score = 95
   
-  ? math.gt(user_score, 90) {
-    log.print("Grade: A")
+  ? math_gt(user_score, 90) {
+    log_print("Grade: A")
   } : {
-    log.print("Grade: B")
+    log_print("Grade: B")
   }
 }
 ```
@@ -24,10 +24,10 @@ Since Hank evaluates truthiness directly from expressions, parentheses around th
 
 ```hank
 // Paren-less (Idiomatic)
-? math.eq(x, y) { ... }
+? math_eq(x, y) { ... }
 
 // Parentheses (Valid Grouped Expression)
-? (math.eq(x, y)) { ... }
+? (math_eq(x, y)) { ... }
 ```
 
 ## Rescue Gate (`~`)
@@ -37,9 +37,9 @@ The Rescue gate allows you to catch **Runtime Exceptions** (such as Type Mismatc
 ```hank
 () {
   ? result = risky_task() {
-    log.print("Task succeeded")
+    log_print("Task succeeded")
   } ~ (e) {
-    log.error(str.format("Task failed with code: %1", err.code(e)))
+    log_error(str_format("Task failed with code: %1", err_code(e)))
   }
 }
 ```

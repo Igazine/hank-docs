@@ -28,49 +28,43 @@ export class BrowserRunner extends Runner {
     }
 
     private setupCore() {
-        // Override default log module with browser-specific callbacks
-        this.registerModule('log', {
-            print: (args) => {
+        // Flat task registration
+        this.registerTasks({
+            log_print: (args) => {
                 const msg = args.map(a => this.valToString(a)).join(' ');
                 if (this.options.onPrint) this.options.onPrint(msg);
                 else console.log(msg);
                 return { type: ValueType.Void };
             },
-            error: (args) => {
+            log_error: (args) => {
                 const msg = args.map(a => this.valToString(a)).join(' ');
                 if (this.options.onError) this.options.onError(msg);
                 else console.error(msg);
                 return { type: ValueType.Void };
             },
-            warn: (args) => {
+            log_warn: (args) => {
                 const msg = args.map(a => this.valToString(a)).join(' ');
                 if (this.options.onWarn) this.options.onWarn(msg);
                 else console.warn(`[WARN] ${msg}`);
                 return { type: ValueType.Void };
-            }
-        });
-
-        this.registerModule('runtime', {
-            halt: (args) => {
+            },
+            runtime_halt: (args) => {
                 const code = args.length > 0 && args[0].type === ValueType.Number ? args[0].value : 0;
                 throw new Error(`HANK_HALT:${code}`);
             },
-            elapsedTime: () => ({ type: ValueType.Number, value: typeof performance !== 'undefined' ? performance.now() : 0 }),
-            signal: (args) => {
+            runtime_elapsedTime: () => ({ type: ValueType.Number, value: typeof performance !== 'undefined' ? performance.now() : 0 }),
+            runtime_signal: (args) => {
                 if (args.length > 0 && this.options.onSignal) this.options.onSignal(args[0]);
                 return { type: ValueType.Void };
-            }
-        });
-
-        this.registerModule('env', {
-            get: (args) => {
+            },
+            env_get: (args) => {
                 if (args.length === 0) return { type: ValueType.Void };
                 const key = this.valToString(args[0]);
                 const val = (this.options.env || {})[key];
                 return val !== undefined ? { type: ValueType.String, value: val } : { type: ValueType.Void };
             },
-            set: () => ({ type: ValueType.Void }),
-            keys: () => ({
+            env_set: () => ({ type: ValueType.Void }),
+            env_keys: () => ({
                 type: ValueType.Array,
                 value: Object.keys(this.options.env || {}).map(k => ({ type: ValueType.String, value: k }))
             })

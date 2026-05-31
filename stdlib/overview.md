@@ -21,9 +21,9 @@ The Hank Standard Library is a modular collection of native tasks provided by th
 
 ## Philosophical Constraints
 
-1. **Strict Procedural Purity**: Values are inert. You never call methods on variables. Use `str.length(s)`, not `s.length()`.
-2. **Fail-Fast Typing**: Standard tasks strictly enforce parameter types. Passing a String to `math.add` triggers a catchable **Type Mismatch** Error.
-3. **Immutability by Default**: Most tasks return new values. Only `arr.push`, `arr.pop`, and `map.set` perform in-place mutation, and only on internal data types (never on Opaque handles).
+1. **Strict Procedural Purity**: Values are inert. You never call methods on variables. Use `str_length(s)`, not `s.length()`.
+2. **Fail-Fast Typing**: Standard tasks strictly enforce parameter types. Passing a String to `math_add` triggers a catchable **Type Mismatch** Error.
+3. **Immutability by Default**: Most tasks return new values. Only `arr_push`, `arr_pop`, and `map_set` perform in-place mutation, and only on internal data types (never on Opaque handles).
 
 ## Official Extensions
 

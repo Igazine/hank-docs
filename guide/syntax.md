@@ -10,10 +10,10 @@ Hank's syntax is purely symbolic, emphasizing data density and procedural purity
 * **`?`**: Initiates Flow Control (If).
 * **`:`**: Fallback branch.
 * **`~`**: Rescue branch (Catch).
-* **`#`**: Core Scope escape (direct Native Task lookup).
-* **`@`**: Parse-time Macro inclusion.
-* **`^`**: Return operator.
-* **`!`**: Logical NOT.
+*   **`#`**: Core Scope escape (direct Native Task lookup).
+*   **`@`**: Parse-time Macro inclusion.
+*   **`^`**: Return operator.
+*   **`!`**: Logical NOT.
 
 ## Intrinsic Types
 
@@ -27,7 +27,7 @@ An implementation must support the following eight value types:
 | **Array** | Ordered list of values. | `[1, "a", []]` |
 | **Map** | Unordered key-value map. Keys must be strings. | `[ "x": 1, "y": 2 ]` |
 | **Opaque** | Handle to Host state (e.g. Regex). | (Created by Native Tasks) |
-| **Task** | A callable unit of execution. | `(x) { ^ math.add(x, 1) }` |
+| **Task** | A callable unit of execution. | `(x) { ^ math_add(x, 1) }` |
 | **Error** | A structured runtime failure payload. | (Yielded by Engine) |
 
 ## Maps vs. Blocks
@@ -40,7 +40,7 @@ user = [ "name": "tamas", "age": 30 ]
 
 // This is a Block (Executable Logic)
 logic = {
-  log.print("I am executing code")
+  log_print("I am executing code")
   "result"
 }
 ```
@@ -64,7 +64,7 @@ Hank uses **strict lexical scoping**.
   (x) {
     count = 20 // Shadows outer 'count' in this scope
   }(1)
-  log.print(count) // Still 10
+  log_print(count) // Still 10
 }
 ```
 
@@ -74,8 +74,8 @@ To mutate shared state, use reference types like **Arrays** or **Maps**.
 () {
   state = [ "count": 10 ]
   () {
-    map.set(state, "count", 20) // Mutates the shared Map
+    map_set(state, "count", 20) // Mutates the shared Map
   }()
-  log.print(state.count) // 20
+  log_print(map_get(state, "count")) // 20
 }
 ```

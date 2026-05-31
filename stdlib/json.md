@@ -4,19 +4,19 @@ Hank provides first-class support for JSON, ensuring data can flow seamlessly ac
 
 ## `json` Module
 
-* **`parse(s)`**: Converts a JSON string into Hank data. JSON Objects are converted to **Hank Maps**.
-* **`stringify(val)`**: Converts Hank data into a JSON string.
+* **`json_parse(s)`**: Converts a JSON string into Hank data. JSON Objects are converted to **Hank Maps**.
+* **`json_stringify(val)`**: Converts Hank data into a JSON string.
 
 ```hank
 () {
   json_str = '{"user": "tamas", "id": 123}'
-  data = json.parse(json_str)
+  data = json_parse(json_str)
   
-  log.print(data.user) // "tamas"
+  log_print(map_get(data, "user")) // "tamas"
   
   // Re-serialization
   m = [ "x": 10, "y": 20 ]
-  log.print(json.stringify(m)) // '{"x": 10, "y": 20}'
+  log_print(json_stringify(m)) // '{"x": 10, "y": 20}'
 }
 ```
 

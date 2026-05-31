@@ -4,31 +4,31 @@ import { BrowserRunner } from '../../../src/BrowserRunner'
 
 const activeTab = ref<'script' | 'vfs'>('script')
 const script = ref(`() {
-  log.print("Hello from Hank!")
-  
+  log_print("Hello from Hank!")
+
   // New Map Syntax
   user = [
     "name": "Tamas",
     "role": "Architect"
   ]
-  
-  // Paren-less Flow Control
-  ? math.eq(user.name, "Tamas") {
-    log.print(str.format("Welcome, %1!", user.name))
+
+  // Flat Namespace (Procedural)
+  ? math_eq(map_get(user, "name"), "Tamas") {
+    log_print(str_format("Welcome, %1!", map_get(user, "name")))
   } : {
-    log.print("Access Denied")
+    log_print("Access Denied")
   }
-  
+
   // Safe Error Rescuing
-  ? math.add(user.name, 100) {
-    log.print("Success")
+  ? math_add(map_get(user, "name"), 100) {
+    log_print("Success")
   } ~ (e) {
-    log.error(str.format("Error %1: %2", err.code(e), err.message(e)))
+    log_error(str_format("Error %1: %2", err_code(e), err_message(e)))
   }
 }`)
 
 const vfs = ref(JSON.stringify({
-  "utils": "() { ^ [ \"add_ten\": (n) { ^ math.add(n, 10) } ] }"
+  "utils": "() { ^ [ \"add_ten\": (n) { ^ math_add(n, 10) } ] }"
 }, null, 2))
 
 const output = ref<{ msg: string, type: 'stdout' | 'stderr' | 'warn' | 'error' | 'system' }[]>([])
