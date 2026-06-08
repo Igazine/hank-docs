@@ -15,10 +15,10 @@ Experiment with Hank syntax and the standard library directly in your browser.
 ```hal
 () {
   score = 85
-  ? (math.gt(score, 90)) {
-    log.print("Grade: A")
+  ? math_gt(score, 90) {
+    log_print("Grade: A")
   } : {
-    log.print("Grade: B or lower")
+    log_print("Grade: B or lower")
   }
 }
 ```
@@ -27,10 +27,10 @@ Experiment with Hank syntax and the standard library directly in your browser.
 ```hal
 () {
   fruits = ["apple", "banana"]
-  arr.push(fruits, "cherry")
+  arr_push(fruits, "cherry")
   
-  arr.each(fruits, (item, i) {
-    log.print(str.format("%1: %2", i, item))
+  arr_each(fruits, (item, i) {
+    log_print(str_format("%1: %2", i, item))
   })
 }
 ```
@@ -43,12 +43,28 @@ This example uses the `browser` module, which is **only** available in the Brows
   msg = "Hello from the browser!"
   
   // This prints to the playground's internal output
-  log.print(msg)
+  log_print(msg)
   
   // This prints to your browser's Developer Console (F12)
-  browser.log(msg)
+  browser_log(msg)
   
   // This triggers a native browser alert
-  browser.alert(msg)
+  browser_alert(msg)
+}
+```
+
+### Example: Virtual File System (VFS)
+The Playground includes a virtual filesystem. You can define multiple files in the **Virtual Files** tab and include them in your main script using the `@` macro.
+
+By default, an `add_ten` file is provided that adds 10 to its argument.
+
+```hal
+@ "add_ten"
+() {
+  // The @ macro above binds the task defined in 'add_ten.hank'
+  // to the 'add_ten' identifier in this scope.
+  result = add_ten(5)
+  
+  log_print(str_format("Result from VFS: %1", result))
 }
 ```

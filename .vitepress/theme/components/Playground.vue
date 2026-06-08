@@ -28,7 +28,7 @@ const script = ref(`() {
 }`)
 
 const vfs = ref(JSON.stringify({
-  "utils": "() { ^ [ \"add_ten\": (n) { ^ math_add(n, 10) } ] }"
+  "add_ten": "(n) { ^ math_add(n, 10) }"
 }, null, 2))
 
 const output = ref<{ msg: string, type: 'stdout' | 'stderr' | 'warn' | 'error' | 'system' }[]>([])
