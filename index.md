@@ -30,7 +30,7 @@ Hank is a purely symbolic, instruction-oriented embeddable language designed to 
 
 This site contains the educational guides and playground for the Hank ecosystem. The **Source of Truth**, including formal language specifications and engine conformance tests, is maintained in the core repository:
 
-👉 **[github.com/Igazine/hank](https://github.com/Igazine/hank)**
+**[github.com/Igazine/hank](https://github.com/Igazine/hank)**
 
 ## Core Philosophy
 
