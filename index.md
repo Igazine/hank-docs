@@ -43,7 +43,7 @@ Hank is target-agnostic and has zero built-in I/O capabilities. It cannot read f
 There are no reserved keywords for values or control flow definitions. Keywords common in other languages—such as `true`, `false`, `null`, `import`, `func`, `var`, `let`, `for`, `if`, or `private`—do not exist as language primitives. They are simply identifiers that resolve to Hank values (usually `Void` for falsy states and `Number(1)` for truthy states).
 
 ### 3. Dumb Variables
-Variables in Hank (Strings, Numbers, Arrays, Objects) are purely inert memory containers. They do not have methods, prototypes, or hidden logic. All operations on data must be performed by passing the variable to an explicit module task.
+Variables in Hank (Strings, Numbers, Arrays, Maps) are purely inert memory containers. They do not have methods, prototypes, or hidden logic. All operations on data must be performed by passing the variable to an explicit module task.
 
 ## Architectural Rigor
 

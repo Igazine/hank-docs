@@ -38,7 +38,7 @@ Because macro expansion results in assignments, the imported tasks are available
 
 ```hank
 () {
-  log.print(math_utils.sum(1, 2)) // Valid due to hoisting
+  log_print(math_utils.sum(1, 2)) // Valid due to hoisting
   @ "math_utils"
 }
 ```

@@ -8,7 +8,7 @@ A task is defined by a parameter list followed by a structural block.
 
 ```hank
 (a, b) {
-  ^ math.add(a, b)
+  ^ math_add(a, b)
 }
 ```
 
@@ -40,7 +40,7 @@ The `^` sigil immediately halts the current task and returns a value to the call
 
 ```hank
 () {
-  ? (os.is_mac()) { ^ "Mac OS" }
+  ? (os_isMacOS()) { ^ "Mac OS" }
   ^ "Other"
 }
 ```
@@ -59,7 +59,7 @@ Because Hank uses a two-pass execution model, inline tasks are hoisted. You can 
 
 ```hank
 () {
-  log.print(get_msg()) // Hoisted call
+  log_print(get_msg()) // Hoisted call
 
   get_msg = () {
     ^ "Hello from inline task"
